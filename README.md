@@ -1,2 +1,2 @@
 # bfos
-The Brainfuck OS
+The Brainf*ck OS
