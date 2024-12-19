@@ -1,2 +1,4 @@
-# bfos
-The Brainf*ck OS
+# bfOS
+
+## The Brainf*ck OS
+
