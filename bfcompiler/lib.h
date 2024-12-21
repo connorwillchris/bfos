@@ -6,11 +6,17 @@
 
 #define BUFFER_SIZE 4096
 
-typedef struct {
-    char * buffer;
-    size_t bufferSize;
-} AST_Node;
+typedef enum {
+	NONE,
+	INSTRUCTION,
+	LOOP_BEGIN,
+	LOOP_END,
+} NodeType;
 
-int compileFile(char * string, int fileSize);
+int scanFile(char * string, int fileSize);
+
+int openFile(char * pathname);
+
+int createAST(char * buffer, int bufferSize);
 
 #endif // LIB_H

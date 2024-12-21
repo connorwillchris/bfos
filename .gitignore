@@ -5,7 +5,7 @@
 bfcompiler/bfcompiler
 
 # compiled files
-build
+build/
 
 # other
-.vscode
+.vscode/

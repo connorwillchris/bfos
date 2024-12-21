@@ -3,10 +3,6 @@
 
 #include "lib.h"
 
-int openFile(char * pathname);
-int compileFile(char * string, int fileSize);
-int abstractSyntaxTree(char * buffer, int bufferSize);
-
 int main(int argc, char ** argv) {
 	// if there are 2 or more arguments
 	if (argc > 1) {
@@ -60,12 +56,63 @@ int openFile(char * pathname) {
 	}
 	
 	// if all the errors above don't happen, we can successfully compile!
-	int error = compileFile(buffer, fileSize);
+	int error = scanFile(buffer, fileSize);
+	if (error)
+		return error;
 
 	// free the malloced file so we don't get a memory leak!
 	free(buffer);
 	fclose(file);
 	
 	// just so we don't get an error on accident!!
+	return 0;
+}
+
+int scanFile(char * string, int fileSize) {
+	// allocate 4096 bytes of space to start out. We can expand
+	// as needed.
+	int currentBufferSize = BUFFER_SIZE;
+
+	// create a buffer index
+	size_t bufferIndex = 0;
+	
+	// finally, malloc a list of tokens
+	char * buffer = (char *)malloc(currentBufferSize);
+	
+	// loop through each char in the string, looking for
+	// any of the valid chars.
+	for (int i = 0; i < fileSize; i++) {
+		switch(string[i]) {
+			case '<':
+			case '>':
+			case '+':
+			case '-':
+			case '[':
+			case ']':
+			case '.':
+			case ',':
+				// if the buffer is full, realloc it to be
+				// bigger
+				if (bufferIndex >= currentBufferSize) {
+					currentBufferSize += BUFFER_SIZE;
+					buffer = (char *)realloc(
+						buffer, currentBufferSize
+					);
+				}
+				// add the char to the buffer
+				buffer[bufferIndex++] = string[i];
+				break;
+
+			default:
+				break;
+		}
+	}
+
+	// now that we have a buffer, we can start compiling the
+	// code
+	createAST(buffer, bufferIndex);
+
+	// get rid of buffer so we don't get a mem leak
+	free(buffer);
 	return 0;
 }
