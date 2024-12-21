@@ -1,1 +1,11 @@
+# WINDOWS STUFF
 *.exe
+
+# LINUX
+bfcompiler/bfcompiler
+
+# compiled files
+build
+
+# other
+.vscode

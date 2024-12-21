@@ -1,1 +1,1 @@
->++++++++[<++++++++>-]<+.			// hello world
+>++++++++[<++++++++>-]<+. PRINTS A TO THE CONSOLE
