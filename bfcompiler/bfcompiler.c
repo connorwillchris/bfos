@@ -2,27 +2,36 @@
 #include <stdlib.h>
 
 #include "lib.h"
+#include "ast.h"
 
 int main(int argc, char ** argv) {
+	
 	// if there are 2 or more arguments
 	if (argc > 1) {
+
+		//luaL_dofile(L, "make.lua");
+
 		// compile all the files...
 		for (int i = 1; i < argc; i++) {
 			int error = openFile(argv[i]);
-			
+
 			// check if the file COULD be compiled, otherwise
 			// throw an error
 			if (error) {
+				//lua_close(L);
 				return error;
 			}
 		}
 	}
+
 	// otherwise throw an error
 	else {
 		fprintf(stderr, "No file arguments given!\n");
+		//lua_close(L);
 		return 1;
 	}
 	
+	//lua_close(L);
 	// exit with error code of success
 	return 0;
 }
@@ -90,6 +99,8 @@ int scanFile(char * string, int fileSize) {
 			case '[':
 			case ']':
 			case '.':
+				buffer[bufferIndex++] = NODE_OUTPUT;
+				break;
 			case ',':
 				// if the buffer is full, realloc it to be
 				// bigger
@@ -110,9 +121,14 @@ int scanFile(char * string, int fileSize) {
 
 	// now that we have a buffer, we can start compiling the
 	// code
-	createAST(buffer, bufferIndex);
+	ASTNode * ast = parseTokens(buffer, bufferIndex);
+
+	// do something with the ast
+	printf("AST\n");
+	printNodes(ast, 0);
 
 	// get rid of buffer so we don't get a mem leak
+	freeAST(ast);
 	free(buffer);
 	return 0;
 }

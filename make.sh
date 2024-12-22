@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 build_dir="build"
 
 if [ ! -e $build_dir ];
