@@ -38,7 +38,7 @@ int main(int argc, char ** argv) {
 
 int openFile(char * pathname) {
 	FILE * file = fopen(pathname, "rb");
-	
+
 	// check if the file could be opened
 	if (file == NULL) {
 		fprintf(stderr, "Could not open file '%s'!\n", pathname);
@@ -77,6 +77,7 @@ int openFile(char * pathname) {
 	return 0;
 }
 
+// really messy, but works for now
 int scanFile(char * string, int fileSize) {
 	// allocate 4096 bytes of space to start out. We can expand
 	// as needed.
@@ -86,19 +87,73 @@ int scanFile(char * string, int fileSize) {
 	size_t bufferIndex = 0;
 	
 	// finally, malloc a list of tokens
-	char * buffer = (char *)malloc(currentBufferSize);
+	NodeType * buffer = (NodeType *)malloc(currentBufferSize);
 	
 	// loop through each char in the string, looking for
 	// any of the valid chars.
 	for (int i = 0; i < fileSize; i++) {
 		switch(string[i]) {
 			case '<':
+				if (bufferIndex >= currentBufferSize) {
+					currentBufferSize += BUFFER_SIZE;
+					buffer = (NodeType *)realloc(
+						buffer, currentBufferSize
+					);
+				}
+				buffer[bufferIndex++] = NODE_MOVE_LEFT;
+				break;
 			case '>':
+				if (bufferIndex >= currentBufferSize) {
+					currentBufferSize += BUFFER_SIZE;
+					buffer = (NodeType *)realloc(
+						buffer, currentBufferSize
+					);
+				}
+				buffer[bufferIndex++] = NODE_MOVE_RIGHT;
+				break;
 			case '+':
+				if (bufferIndex >= currentBufferSize) {
+					currentBufferSize += BUFFER_SIZE;
+					buffer = (NodeType *)realloc(
+						buffer, currentBufferSize
+					);
+				}
+				buffer[bufferIndex++] = NODE_INCREMENT;
+				break;
 			case '-':
+				if (bufferIndex >= currentBufferSize) {
+					currentBufferSize += BUFFER_SIZE;
+					buffer = (NodeType *)realloc(
+						buffer, currentBufferSize
+					);
+				}
+				buffer[bufferIndex++] = NODE_DECREMENT;
+				break;
 			case '[':
+				if (bufferIndex >= currentBufferSize) {
+					currentBufferSize += BUFFER_SIZE;
+					buffer = (NodeType *)realloc(
+						buffer, currentBufferSize
+					);
+				}
+				buffer[bufferIndex++] = NODE_LOOP_L;
+				break;
 			case ']':
+				if (bufferIndex >= currentBufferSize) {
+					currentBufferSize += BUFFER_SIZE;
+					buffer = (NodeType *)realloc(
+						buffer, currentBufferSize
+					);
+				}
+				buffer[bufferIndex++] = NODE_LOOP_R;
+				break;
 			case '.':
+				if (bufferIndex >= currentBufferSize) {
+					currentBufferSize += BUFFER_SIZE;
+					buffer = (NodeType *)realloc(
+						buffer, currentBufferSize
+					);
+				}
 				buffer[bufferIndex++] = NODE_OUTPUT;
 				break;
 			case ',':
@@ -106,12 +161,12 @@ int scanFile(char * string, int fileSize) {
 				// bigger
 				if (bufferIndex >= currentBufferSize) {
 					currentBufferSize += BUFFER_SIZE;
-					buffer = (char *)realloc(
+					buffer = (NodeType *)realloc(
 						buffer, currentBufferSize
 					);
 				}
 				// add the char to the buffer
-				buffer[bufferIndex++] = string[i];
+				buffer[bufferIndex++] = NODE_INPUT;
 				break;
 
 			default:
@@ -124,8 +179,11 @@ int scanFile(char * string, int fileSize) {
 	ASTNode * ast = parseTokens(buffer, bufferIndex);
 
 	// do something with the ast
-	printf("AST\n");
-	printNodes(ast, 0);
+	/*printf("AST\n");
+	printNodes(ast, 0);*/
+
+	printf("\t.file test1\n\t.global _start\n\t.text\n_start:\n");
+	parseNodes(ast);
 
 	// get rid of buffer so we don't get a mem leak
 	freeAST(ast);
