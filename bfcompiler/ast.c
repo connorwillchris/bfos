@@ -125,11 +125,10 @@ void parseNodes(ASTNode * root) {
                 break;
             case NODE_LOOP_L:
                 printf("\tcall L%d\nL%d:\n", 1, 1);
-                parseNodes(root->data.loopBody);
+                //parseNodes(root->data.loopBody);
                 break;
             case NODE_LOOP_R:
                 printf("\tret\n");
-                //printf("]\n");
                 break;
 
             default:

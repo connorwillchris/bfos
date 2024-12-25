@@ -8,10 +8,7 @@ then
 fi
 
 # build the bfcompiler
-echo "== Making the compiler =="
-gcc -o bfcompiler/bfcompiler \
-    bfcompiler/bfcompiler.c \
-    bfcompiler/ast.c
+# ...
 
 # then compile each file in the kernel directory
 echo "== Compiling kernel =="
@@ -20,5 +17,3 @@ do
     echo "Compiling file: kernel/$i.b"
     ./bfcompiler/bfcompiler "kernel/$i.b" > "build/$i.s"
 done
-
-#cat build/game.s
